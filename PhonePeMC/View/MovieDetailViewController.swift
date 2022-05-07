@@ -76,6 +76,7 @@ class MovieDetailViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.4), imageView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.4), imageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20), imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 40)])
         imageView.layer.cornerRadius = 6
+        imageView.clipsToBounds = true
         self.view.addSubview(releaseDateLabel)
         releaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([releaseDateLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20), releaseDateLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20), releaseDateLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 20)])
