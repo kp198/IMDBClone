@@ -42,4 +42,9 @@ class MovieCell: UITableViewCell {
         descrpnLabel.font = UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .body), size: 16)
         
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imgeView.image = nil
+    }
 }

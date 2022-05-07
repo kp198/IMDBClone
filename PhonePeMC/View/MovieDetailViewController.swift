@@ -17,6 +17,7 @@ class MovieDetailViewController: UIViewController {
     let popularityLabel = UILabel.init()
     let overViewLabel = UILabel.init()
     var presenter: MoviePresenter?
+    var movieName = String()
     
     enum LabelType {
         case rating
@@ -28,14 +29,16 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        self.navigationItem.title = self.movieName
     }
     
-    init(rating: String, overView: String,popularity: String, release: String, image: UIImage?, url: String?) {
+    init(movieName: String,rating: String, overView: String,popularity: String, release: String, image: UIImage?, url: String?) {
         imageView.image = image
         super.init(nibName: nil, bundle: nil)
         if image == nil {
             retrieveImage(url: url)
         }
+        self.movieName = movieName
         releaseDateLabel.attributedText = setAttributedTitle(text: release, type: .release)
         overViewLabel.attributedText = setAttributedTitle(text: overView, type: .overView)
         ratingLabel.attributedText = setAttributedTitle(text: rating, type: .rating)

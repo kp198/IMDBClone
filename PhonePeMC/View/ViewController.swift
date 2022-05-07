@@ -18,10 +18,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.view.backgroundColor = .brown
         setupTable()
         setUpData()
         setLoader()
+        self.navigationItem.title = "Movies"
     }
 
     
@@ -57,6 +57,10 @@ class ViewController: UIViewController {
     }
     
     func setImage(imgView: UIImageView?, url: String, indexPath: IndexPath) {
+        if let images = image , images.count > indexPath.row,let img = images[indexPath.row] {
+            imgView?.image = img
+            return
+        }
         presenter.retrieveImage(url: url) { [weak self]
             data in
             DispatchQueue.main.async {
@@ -93,11 +97,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let movie = movies?[indexPath.row] {
-//            let img = image?.getElementAt(index: indexPath.row)
-            let movieVC = MovieDetailViewController.init(rating: String(movie.vote_average), overView: movie.overview, popularity: String(movie.popularity), release: movie.release_date, image: image?.count ?? 0 > indexPath.row ? image?[indexPath.row] : nil, url: movie.poster_path)
-            let navVC = UINavigationController.init(rootViewController: movieVC)
-            self.present(navVC, animated: true)
+            let movieVC = MovieDetailViewController.init(movieName: movie.original_title, rating: String(movie.vote_average), overView: movie.overview, popularity: String(movie.popularity), release: movie.release_date, image: image?.count ?? 0 > indexPath.row ? image?[indexPath.row] : nil, url: movie.poster_path)
+            self.navigationController?.pushViewController(movieVC, animated: true)
         }
     }
     
