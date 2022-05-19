@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     let loader = UIActivityIndicatorView.init()
     var movies: [Movie]?
     let presenter = MoviePresenter.init()
-    var image: [UIImage?]?
+//    var image: [UIImage?]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         presenter.retrieveMovies(completion: {[weak self]
             result, err in
             self?.movies = result?.results
-            self?.image = Array.init(repeating: nil, count: self?.movies?.count ?? 0)
+//            self?.image = Array.init(repeating: nil, count: self?.movies?.count ?? 0)
             DispatchQueue.main.async {
                 self?.table.reloadData()
                 self?.loader.stopAnimating()
@@ -56,23 +56,24 @@ class ViewController: UIViewController {
         })
     }
     
-    func setImage(imgView: UIImageView?, url: String, indexPath: IndexPath) {
-        if let images = image , images.count > indexPath.row,let img = images[indexPath.row] {
-            imgView?.image = img
+    func setImage(imgView: UIImageView?, movie: Movie, url: String, indexPath: IndexPath) {
+        if let image = movie.image {
+            imgView?.image = image
             return
         }
-        presenter.retrieveImage(url: url) { [weak self]
+        presenter.retrieveImage(url: url) {
             data in
             DispatchQueue.main.async {
                 if let data = data ,let img  = UIImage.init(data: data) {
                     imgView?.image = img
-                    if self?.image != nil {
-                        if self!.image!.count > indexPath.row {
-                            self?.image!.insert(img, at: indexPath.row)
-                     }
-                    } else {
-                        self?.image = [img]
-                    }
+                    movie.image = img
+//                    if self?.image != nil {
+//                        if self!.image!.count > indexPath.row {
+//                            self?.image!.insert(img, at: indexPath.row)
+//                     }
+//                    } else {
+//                        self?.image = [img]
+//                    }
                 }
             }
 
@@ -91,7 +92,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = movies?[indexPath.row].original_title
         cell.descrpnLabel.text = movies?[indexPath.row].overview
         if let url = movies?[indexPath.row].poster_path {
-            setImage(imgView: cell.imgeView, url: url, indexPath: indexPath)
+            setImage(imgView: cell.imgeView, movie: movies![indexPath.row], url: url, indexPath: indexPath)
         }
         return cell
     }
@@ -99,7 +100,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let movie = movies?[indexPath.row] {
-            let movieVC = MovieDetailViewController.init(movieName: movie.original_title, rating: String(movie.vote_average), overView: movie.overview, popularity: String(movie.popularity), release: movie.release_date, image: image?.count ?? 0 > indexPath.row ? image?[indexPath.row] : nil, url: movie.poster_path)
+            let movieVC = MovieDetailViewController.init(movieName: movie.original_title, rating: String(movie.vote_average), overView: movie.overview, popularity: String(movie.popularity), release: movie.release_date, image: movie.image/*image?.count ?? 0 > indexPath.row ? image?[indexPath.row] : nil*/, url: movie.poster_path)
             self.navigationController?.pushViewController(movieVC, animated: true)
         }
     }
